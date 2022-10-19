@@ -1,0 +1,167 @@
+Creating a key pair in order to access the instances...
+Creating IAM role so the instances can access to S3 bucket...
+{
+    Role {
+        Path ,
+        RoleName s3-access-to-ec2,
+        RoleId AROAT3VIJOVJFQTQQEXCE,
+        Arn arnawsiam265567171922roles3-access-to-ec2,
+        CreateDate 2022-08-25T100447+0000,
+        AssumeRolePolicyDocument {
+            Version 2012-10-17,
+            Statement {
+                Effect Allow,
+                Principal {
+                    Service ec2.amazonaws.com
+                },
+                Action stsAssumeRole
+            }
+        }
+    }
+}
+Attaching S3 Full Access policy to the role created above...
+Creating IAM instance profile...
+{
+    InstanceProfile {
+        Path ,
+        InstanceProfileName s3-access-to-ec2,
+        InstanceProfileId AIPAT3VIJOVJN3ISPZQY3,
+        Arn arnawsiam265567171922instance-profiles3-access-to-ec2,
+        CreateDate 2022-08-25T100450+0000,
+        Roles []
+    }
+}
+Adding role to instance profile
+Creating Security Group to the ALB...
+SG ID - sg-03a4b95747ccbaed9
+Create Security Group Inbound Rule
+{
+    Return true,
+    SecurityGroupRules [
+        {
+            SecurityGroupRuleId sgr-05d0a61a48dbd95ec,
+            GroupId sg-03a4b95747ccbaed9,
+            GroupOwnerId 265567171922,
+            IsEgress false,
+            IpProtocol tcp,
+            FromPort 80,
+            ToPort 80,
+            CidrIpv4 0.0.0.00
+        }
+    ]
+}
+Creating Security Group which allows communication between ALB to EC2 instances...
+SG ID - sg-0755d53ac7eb2e53d
+{
+    Return true,
+    SecurityGroupRules [
+        {
+            SecurityGroupRuleId sgr-07f94ef226036f8b7,
+            GroupId sg-0755d53ac7eb2e53d,
+            GroupOwnerId 265567171922,
+            IsEgress false,
+            IpProtocol tcp,
+            FromPort 80,
+            ToPort 80,
+            CidrIpv4 0.0.0.00
+        }
+    ]
+}
+Creating bucket red-blue-html-s3
+{
+    Location red-blue-html-s3
+}
+sync the newly created folders to the newly created S3...
+upload blueindex.html to s3red-blue-html-s3blueindex.html
+upload redindex.html to s3red-blue-html-s3redindex.html
+Creating the Blue EC2 Instance...
+Creating the Red EC2 Instance...
+Waiting for Instances to be available...
+Creating target groups for the instances...
+Get Subnets Id
+Creating ALB
+Get ALB ARN...
+Creating ALB Listener...
+LISTENER ARN - arnawselasticloadbalancingus-east-1265567171922listenerappred-blue-lb338a23a697d412a4fdd1501ecc1fa5c3
+Edit listener rule for blue route...
+{
+    Rules [
+        {
+            RuleArn arnawselasticloadbalancingus-east-1265567171922listener-ruleappred-blue-lb338a23a697d412a4fdd1501ecc1fa5c39fe8ef1bf5b77e15,
+            Priority 5,
+            Conditions [
+                {
+                    Field path-pattern,
+                    Values [
+                        blue
+                    ],
+                    PathPatternConfig {
+                        Values [
+                            blue
+                        ]
+                    }
+                }
+            ],
+            Actions [
+                {
+                    Type forward,
+                    TargetGroupArn arnawselasticloadbalancingus-east-1265567171922targetgroupBlue1b248e8b083a0c37,
+                    ForwardConfig {
+                        TargetGroups [
+                            {
+                                TargetGroupArn arnawselasticloadbalancingus-east-1265567171922targetgroupBlue1b248e8b083a0c37,
+                                Weight 1
+                            }
+                        ],
+                        TargetGroupStickinessConfig {
+                            Enabled false
+                        }
+                    }
+                }
+            ],
+            IsDefault false
+        }
+    ]
+}
+Edit listener rule for red route...
+{
+    Rules [
+        {
+            RuleArn arnawselasticloadbalancingus-east-1265567171922listener-ruleappred-blue-lb338a23a697d412a4fdd1501ecc1fa5c365379ccc807e6258,
+            Priority 4,
+            Conditions [
+                {
+                    Field path-pattern,
+                    Values [
+                        red
+                    ],
+                    PathPatternConfig {
+                        Values [
+                            red
+                        ]
+                    }
+                }
+            ],
+            Actions [
+                {
+                    Type forward,
+                    TargetGroupArn arnawselasticloadbalancingus-east-1265567171922targetgroupRed838afcd8cb9e5592,
+                    ForwardConfig {
+                        TargetGroups [
+                            {
+                                TargetGroupArn arnawselasticloadbalancingus-east-1265567171922targetgroupRed838afcd8cb9e5592,
+                                Weight 1
+                            }
+                        ],
+                        TargetGroupStickinessConfig {
+                            Enabled false
+                        }
+                    }
+                }
+            ],
+            IsDefault false
+        }
+    ]
+}
+Waiting for ALB to be available...
+!!!!!!!! ALL DONE SUCCSSEFULLY !!!!!!!!
